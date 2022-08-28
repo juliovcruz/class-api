@@ -1,0 +1,266 @@
+definitions:
+  request.ClassRequest:
+    properties:
+      description:
+        description: 'TODO: DB'
+        maxLength: 255
+        minLength: 5
+        type: string
+      name:
+        maxLength: 50
+        minLength: 5
+        type: string
+      schedules:
+        type: string
+      teacher_id:
+        type: string
+      total_hours:
+        type: integer
+    required:
+    - description
+    - name
+    - total_hours
+    type: object
+  request.StudentClassRequest:
+    properties:
+      classID:
+        type: string
+      studentID:
+        type: string
+    type: object
+  response.ClassResponse:
+    properties:
+      created_at:
+        type: string
+      deleted:
+        type: boolean
+      id:
+        type: string
+      name:
+        type: string
+      schedules:
+        description: 2N2345
+        type: string
+      teacher_id:
+        type: string
+      total_hours:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  response.StudentClassResponse:
+    properties:
+      class_id:
+        type: string
+      student_id:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /classes:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.ClassResponse'
+            type: array
+      summary: Get All Classes
+      tags:
+      - classes
+    post:
+      consumes:
+      - application/json
+      description: Only the class teacher can create it
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Add class
+        in: body
+        name: class
+        required: true
+        schema:
+          $ref: '#/definitions/request.ClassRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.ClassResponse'
+      summary: Create Class
+      tags:
+      - classes
+  /classes/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ClassID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/response.ClassResponse'
+      summary: Delete Class
+      tags:
+      - classes
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ClassID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ClassResponse'
+      summary: Get Class By ID
+      tags:
+      - classes
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Update class
+        in: body
+        name: class
+        required: true
+        schema:
+          $ref: '#/definitions/request.ClassRequest'
+      - description: ClassID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ClassResponse'
+      summary: Update Class
+      tags:
+      - classes
+  /classes/{id}/student-classes:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ClassID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.StudentClassResponse'
+            type: array
+      summary: Get All Student Classes By Class
+      tags:
+      - classes
+  /student-classes:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Delete studentClass
+        in: body
+        name: class
+        required: true
+        schema:
+          $ref: '#/definitions/request.StudentClassRequest'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/response.StudentClassResponse'
+      summary: Delete StudentClass
+      tags:
+      - student-classes
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Add studentClass
+        in: body
+        name: class
+        required: true
+        schema:
+          $ref: '#/definitions/request.StudentClassRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.StudentClassResponse'
+      summary: Create StudentClass
+      tags:
+      - student-classes
+swagger: "2.0"

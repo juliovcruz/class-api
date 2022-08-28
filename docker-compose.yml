@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  postgres-class-api:
+    image: postgres:alpine3.16
+    environment:
+      POSTGRES_USERNAME: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "postgres"
+    ports:
+      - "5435:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - network
+  class-api:
+    image: golang:1.19-alpine
+    container_name: api
+    restart: always
+    depends_on:
+      -   postgres-class-api
+    links:
+      -   postgres-class-api
+    ports:
+      - "8085:8080"
+    volumes:
+      - .:/usr/src/app
+    networks:
+      - network
+    working_dir: /usr/src/app
+    command: go run ./cmd/api/main.go
+
+networks:
+  network:
+    driver: bridge
