@@ -45,8 +45,6 @@ func (s *AccountService) Auth(token string) (AuthResponse, error) {
 		return AuthResponse{}, errors.New("unauthorized")
 	}
 
-	// TODO: ajustar response
-
 	var response struct {
 		Data struct {
 			ID     string

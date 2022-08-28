@@ -1,6 +1,7 @@
 package request
 
 import (
+	"database/sql"
 	"github.com/google/uuid"
 	"main/internal/entity"
 	"time"
@@ -27,7 +28,7 @@ func (r *ClassRequest) ToEntity() (entity.Class, error) {
 		Description: r.Description,
 		Schedules:   r.Schedules,
 		TeacherID:   id,
-		Deleted:     false,
+		DeletedAt:   sql.NullTime{},
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 	}, nil

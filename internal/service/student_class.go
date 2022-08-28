@@ -24,7 +24,11 @@ func (s *StudentClassService) Create(studentClass entity.StudentClass) error {
 func (s *StudentClassService) Delete(studentID uuid.UUID, classID uuid.UUID) error {
 	var studentClass entity.StudentClass
 
-	if err := s.Db.First(&studentClass, "student_id = ? AND class_id = ?", studentID, classID); err.Error != nil {
+	if err := s.Db.First(&studentClass, "student_id = ? AND class_id = ? AND deleted_at is null", studentID, classID); err.Error != nil {
+		if errors.Is(err.Error, gorm.ErrRecordNotFound) {
+			return err.Error
+		}
+
 		return errors.New("error in get by studentID and classID on database")
 	}
 
@@ -43,7 +47,7 @@ func (s *StudentClassService) Delete(studentID uuid.UUID, classID uuid.UUID) err
 func (s *StudentClassService) GetAllByClassID(classID uuid.UUID) ([]entity.StudentClass, error) {
 	studentClasses := []entity.StudentClass{}
 
-	if err := s.Db.Find(&studentClasses, "class_id = ?", classID); err.Error != nil {
+	if err := s.Db.Find(&studentClasses, "class_id = ? AND deleted_at is null", classID); err.Error != nil {
 		return []entity.StudentClass{}, errors.New("error in get by classID on database")
 	}
 

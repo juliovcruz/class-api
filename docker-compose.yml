@@ -16,6 +16,8 @@ services:
       - network
   class-api:
     image: golang:1.19-alpine
+    environment:
+      SCOPE: "DOCKER"
     container_name: api
     restart: always
     depends_on:

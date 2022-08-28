@@ -1,6 +1,7 @@
 package entity
 
 import (
+	"database/sql"
 	"github.com/google/uuid"
 	"time"
 )
@@ -12,7 +13,7 @@ type Class struct {
 	TotalHours  int    `gorm:"column:total_hours"`
 	Schedules   string // 2N2345
 	TeacherID   uuid.UUID
-	Deleted     bool
-	CreatedAt   time.Time `gorm:"column:created_at"`
-	UpdatedAt   time.Time `gorm:"column:updated_at"`
+	CreatedAt   time.Time    `gorm:"column:created_at"`
+	UpdatedAt   time.Time    `gorm:"column:updated_at"`
+	DeletedAt   sql.NullTime `gorm:"column:deleted_at"`
 }

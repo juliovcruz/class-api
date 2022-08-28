@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
@@ -160,6 +161,11 @@ func (h *ClassHandler) GetByIDHandler(c *gin.Context) {
 
 	class, err := h.Service.GetByID(id)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"message": "not found"})
+			return
+		}
+
 		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
@@ -244,6 +250,11 @@ func (h *ClassHandler) DeleteHandler(c *gin.Context) {
 
 	class, err := h.Service.GetByID(id)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"message": "not found"})
+			return
+		}
+
 		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
