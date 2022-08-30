@@ -1,4 +1,4 @@
-## How to run project
+# How to run project
 
 run `docker-compose up -d`
 
