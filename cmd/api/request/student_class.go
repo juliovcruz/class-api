@@ -8,8 +8,8 @@ import (
 )
 
 type StudentClassRequest struct {
-	ClassID   string `gorm:"column:class_id"`
-	StudentID string `gorm:"column:student_id"`
+	ClassID   string `validate:"uuid4" example:"81136ed8-0df4-4892-8a4a-258a986ec440"`
+	StudentID string `validate:"uuid4" example:"8c113d2f-c749-4f29-9e9c-c7d0a4ebc114"`
 }
 
 func (r *StudentClassRequest) ToEntity() (entity.StudentClass, error) {

@@ -32,7 +32,7 @@ func main() {
 	validatr := validator.New()
 
 	classHandler := handlers.NewClassHandler(db, accountService, validatr)
-	studentClassHandler := handlers.NewStudentClassHandler(db, accountService)
+	studentClassHandler := handlers.NewStudentClassHandler(db, accountService, validatr)
 
 	router := gin.Default()
 

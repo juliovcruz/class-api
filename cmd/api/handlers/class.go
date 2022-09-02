@@ -53,7 +53,13 @@ func (h *ClassHandler) CreateHandler(c *gin.Context) {
 		return
 	}
 
-	if (auth.Role != account_service.TeacherRole || auth.ID != req.TeacherID) && auth.Role != account_service.AdminRole {
+	err = h.validator.Struct(req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	if auth.ID != req.TeacherID && !auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}) {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
 	}
@@ -112,7 +118,7 @@ func (h *ClassHandler) UpdateHandler(c *gin.Context) {
 		return
 	}
 
-	if auth.Role != account_service.TeacherRole && auth.Role != account_service.AdminRole {
+	if !auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}) {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
 	}
@@ -259,7 +265,8 @@ func (h *ClassHandler) DeleteHandler(c *gin.Context) {
 		return
 	}
 
-	if auth.ID != class.TeacherID.String() && auth.Role != account_service.TeacherRole && auth.Role != account_service.AdminRole {
+	if auth.ID != class.TeacherID.String() &&
+		!auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}) {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
 	}

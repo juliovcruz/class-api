@@ -326,24 +326,24 @@
             ],
             "properties": {
                 "description": {
-                    "description": "TODO: DB",
                     "type": "string",
-                    "maxLength": 255,
-                    "minLength": 5
+                    "example": "Ensino de desenvolvimento back-end e front-end"
                 },
                 "name": {
                     "type": "string",
-                    "maxLength": 50,
-                    "minLength": 5
+                    "example": "Desenvolvimento Full Stack"
                 },
                 "schedules": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2N2345"
                 },
                 "teacher_id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "81136ed8-0df4-4892-8a4a-258a986ec440"
                 },
                 "total_hours": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 123
                 }
             }
         },
@@ -351,10 +351,12 @@
             "type": "object",
             "properties": {
                 "classID": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "81136ed8-0df4-4892-8a4a-258a986ec440"
                 },
                 "studentID": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "8c113d2f-c749-4f29-9e9c-c7d0a4ebc114"
                 }
             }
         },
@@ -363,9 +365,6 @@
             "properties": {
                 "created_at": {
                     "type": "string"
-                },
-                "deleted": {
-                    "type": "boolean"
                 },
                 "id": {
                     "type": "string"

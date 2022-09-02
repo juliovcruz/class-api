@@ -8,11 +8,11 @@ import (
 )
 
 type ClassRequest struct {
-	Name        string `validate:"required,gte=5,lte=50"`
-	Description string `validate:"required,gte=5,lte=255"` // TODO: DB
-	TotalHours  int    `validate:"required" json:"total_hours"`
-	Schedules   string
-	TeacherID   string `json:"teacher_id"`
+	Name        string `validate:"required,gte=5,lte=50" example:"Desenvolvimento Full Stack"`
+	Description string `validate:"required,gte=5,lte=255" example:"Ensino de desenvolvimento back-end e front-end"`
+	TotalHours  int    `validate:"required" json:"total_hours" example:"123"`
+	Schedules   string `example:"2N2345"`
+	TeacherID   string `validate:"uuid4" json:"teacher_id" example:"81136ed8-0df4-4892-8a4a-258a986ec440"`
 }
 
 func (r *ClassRequest) ToEntity() (entity.Class, error) {

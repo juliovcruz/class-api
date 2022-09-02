@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 	"main/cmd/api/request"
 	"main/cmd/api/response"
@@ -13,14 +14,16 @@ import (
 type StudentClassHandler struct {
 	Service    service.StudentClassService
 	AccService account_service.AccountService
+	validator  *validator.Validate
 }
 
-func NewStudentClassHandler(db *gorm.DB, accountService account_service.AccountService) StudentClassHandler {
+func NewStudentClassHandler(db *gorm.DB, accountService account_service.AccountService, _validator *validator.Validate) StudentClassHandler {
 	return StudentClassHandler{
 		Service: service.StudentClassService{
 			Db: db,
 		},
 		AccService: accountService,
+		validator:  _validator,
 	}
 }
 
@@ -46,7 +49,13 @@ func (h *StudentClassHandler) CreateHandler(c *gin.Context) {
 		return
 	}
 
-	if auth.ID != req.StudentID && auth.Role != account_service.TeacherRole && auth.Role != account_service.AdminRole {
+	err = h.validator.Struct(req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	if auth.ID != req.StudentID && !auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}) {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
 	}
@@ -92,7 +101,13 @@ func (h *StudentClassHandler) DeleteHandler(c *gin.Context) {
 		return
 	}
 
-	if auth.ID != req.StudentID && auth.Role != account_service.TeacherRole && auth.Role != account_service.AdminRole {
+	err = h.validator.Struct(req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	if auth.ID != req.StudentID && !auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}) {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
 	}

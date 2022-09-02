@@ -2,19 +2,19 @@ definitions:
   request.ClassRequest:
     properties:
       description:
-        description: 'TODO: DB'
-        maxLength: 255
-        minLength: 5
+        example: Ensino de desenvolvimento back-end e front-end
         type: string
       name:
-        maxLength: 50
-        minLength: 5
+        example: Desenvolvimento Full Stack
         type: string
       schedules:
+        example: 2N2345
         type: string
       teacher_id:
+        example: 81136ed8-0df4-4892-8a4a-258a986ec440
         type: string
       total_hours:
+        example: 123
         type: integer
     required:
     - description
@@ -24,16 +24,16 @@ definitions:
   request.StudentClassRequest:
     properties:
       classID:
+        example: 81136ed8-0df4-4892-8a4a-258a986ec440
         type: string
       studentID:
+        example: 8c113d2f-c749-4f29-9e9c-c7d0a4ebc114
         type: string
     type: object
   response.ClassResponse:
     properties:
       created_at:
         type: string
-      deleted:
-        type: boolean
       id:
         type: string
       name:
