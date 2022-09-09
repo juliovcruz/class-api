@@ -14,6 +14,7 @@ func API(router *gin.Engine, classHandler ClassHandler, studentClassHandler Stud
 	classGroup.PUT("/:id", classHandler.UpdateHandler)
 	classGroup.GET("/:id", classHandler.GetByIDHandler)
 	classGroup.GET("/", classHandler.GetAllHandler)
+	classGroup.GET("/:id/student-classes", classHandler.GetAllStudentClassesByHandler)
 	classGroup.DELETE("/:id", classHandler.DeleteHandler)
 
 	studentClassGroup := router.Group("/student-classes")
