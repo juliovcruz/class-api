@@ -27,6 +27,9 @@ func NewClassHandler(db *gorm.DB, accountService account_service.AccountService,
 		},
 		AccService: accountService,
 		validator:  validator,
+		StudentClassService: service.StudentClassService{
+			Db: db,
+		},
 	}
 }
 
