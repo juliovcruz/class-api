@@ -13,7 +13,11 @@ type AuthResponse struct {
 	Role Role
 }
 
-func (r Role) IsRoleAuthorized(rolesAuthorized []Role) bool {
+func (r Role) IsRoleAuthorized(rolesAuthorized []Role, skip bool) bool {
+	if skip {
+		return true
+	}
+
 	rolesAuthorized = append(rolesAuthorized, AdminRole)
 
 	for _, role := range rolesAuthorized {

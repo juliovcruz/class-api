@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
@@ -18,9 +19,10 @@ type ClassHandler struct {
 	AccService          account_service.AccountService
 	StudentClassService service.StudentClassService
 	validator           *validator.Validate
+	SkipAuth            bool
 }
 
-func NewClassHandler(db *gorm.DB, accountService account_service.AccountService, validator *validator.Validate) ClassHandler {
+func NewClassHandler(db *gorm.DB, accountService account_service.AccountService, validator *validator.Validate, SkipAuth bool) ClassHandler {
 	return ClassHandler{
 		Service: service.ClassService{
 			Db: db,
@@ -30,6 +32,7 @@ func NewClassHandler(db *gorm.DB, accountService account_service.AccountService,
 		StudentClassService: service.StudentClassService{
 			Db: db,
 		},
+		SkipAuth: true,
 	}
 }
 
@@ -44,7 +47,7 @@ func NewClassHandler(db *gorm.DB, accountService account_service.AccountService,
 // @Router /classes [post]
 func (h *ClassHandler) CreateHandler(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
-	auth, err := h.AccService.Auth(token)
+	auth, err := h.AccService.Auth(token, h.SkipAuth)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
@@ -62,7 +65,7 @@ func (h *ClassHandler) CreateHandler(c *gin.Context) {
 		return
 	}
 
-	if auth.ID != req.TeacherID && !auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}) {
+	if !auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}, h.SkipAuth) {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
 	}
@@ -102,7 +105,7 @@ func (h *ClassHandler) CreateHandler(c *gin.Context) {
 // @Router /classes/{id} [put]
 func (h *ClassHandler) UpdateHandler(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
-	auth, err := h.AccService.Auth(token)
+	auth, err := h.AccService.Auth(token, h.SkipAuth)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
@@ -121,7 +124,7 @@ func (h *ClassHandler) UpdateHandler(c *gin.Context) {
 		return
 	}
 
-	if !auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}) {
+	if !auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}, false) {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
 	}
@@ -157,7 +160,7 @@ func (h *ClassHandler) UpdateHandler(c *gin.Context) {
 // @Router /classes/{id} [get]
 func (h *ClassHandler) GetByIDHandler(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
-	if _, err := h.AccService.Auth(token); err != nil {
+	if _, err := h.AccService.Auth(token, h.SkipAuth); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
 	}
@@ -190,8 +193,9 @@ func (h *ClassHandler) GetByIDHandler(c *gin.Context) {
 // @Success 200 {array} response.ClassResponse
 // @Router /classes [get]
 func (h *ClassHandler) GetAllHandler(c *gin.Context) {
+	fmt.Println(h.SkipAuth)
 	token := c.Request.Header.Get("Authorization")
-	if _, err := h.AccService.Auth(token); err != nil {
+	if _, err := h.AccService.Auth(token, h.SkipAuth); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
 	}
@@ -215,7 +219,7 @@ func (h *ClassHandler) GetAllHandler(c *gin.Context) {
 // @Router /classes/{id}/student-classes [get]
 func (h *ClassHandler) GetAllStudentClassesByHandler(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
-	if _, err := h.AccService.Auth(token); err != nil {
+	if _, err := h.AccService.Auth(token, h.SkipAuth); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
 	}
@@ -245,7 +249,7 @@ func (h *ClassHandler) GetAllStudentClassesByHandler(c *gin.Context) {
 // @Router /classes/{id} [delete]
 func (h *ClassHandler) DeleteHandler(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
-	auth, err := h.AccService.Auth(token)
+	auth, err := h.AccService.Auth(token, h.SkipAuth)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
@@ -268,8 +272,7 @@ func (h *ClassHandler) DeleteHandler(c *gin.Context) {
 		return
 	}
 
-	if auth.ID != class.TeacherID.String() &&
-		!auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}) {
+	if !auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}, h.SkipAuth) {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
 	}

@@ -23,7 +23,11 @@ func NewAccountService(URL string) AccountService {
 	}
 }
 
-func (s *AccountService) Auth(token string) (AuthResponse, error) {
+func (s *AccountService) Auth(token string, skipAuth bool) (AuthResponse, error) {
+	if skipAuth {
+		return AuthResponse{}, nil
+	}
+
 	req, err := http.NewRequest("GET", s.URL+"/autenticacao/token-valido", nil)
 	if err != nil {
 		return AuthResponse{}, err

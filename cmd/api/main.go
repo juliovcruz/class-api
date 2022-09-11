@@ -20,6 +20,7 @@ func main() {
 	}
 
 	scope := platform.Scope(os.Getenv("SCOPE"))
+	skipAuth := platform.SkipAuth(os.Getenv("SKIP_AUTH"))
 	docs.SwaggerInfo.BasePath = "/"
 
 	db, err := gorm.Open(postgres.Open(scope.GetDBConnectionURL()), &gorm.Config{})
@@ -30,8 +31,8 @@ func main() {
 	accountService := account_service.NewAccountService(scope.GetAccountServiceURL())
 	validatr := validator.New()
 
-	classHandler := handlers.NewClassHandler(db, accountService, validatr)
-	studentClassHandler := handlers.NewStudentClassHandler(db, accountService, validatr)
+	classHandler := handlers.NewClassHandler(db, accountService, validatr, skipAuth)
+	studentClassHandler := handlers.NewStudentClassHandler(db, accountService, validatr, skipAuth)
 
 	handlers.API(classHandler, studentClassHandler)
 }

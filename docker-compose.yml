@@ -18,6 +18,7 @@ services:
     image: golang:1.19-alpine
     environment:
       SCOPE: "DOCKER"
+      SKIP_AUTH: "true"
     container_name: api
     restart: always
     depends_on:

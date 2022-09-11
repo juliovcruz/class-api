@@ -30,3 +30,10 @@ func (s Scope) GetAccountServiceURL() string {
 	log.Fatal("can't get account service url by scope")
 	return ""
 }
+
+func SkipAuth(env string) bool {
+	if env == "true" {
+		return true
+	}
+	return false
+}

@@ -15,15 +15,17 @@ type StudentClassHandler struct {
 	Service    service.StudentClassService
 	AccService account_service.AccountService
 	validator  *validator.Validate
+	SkipAuth   bool
 }
 
-func NewStudentClassHandler(db *gorm.DB, accountService account_service.AccountService, _validator *validator.Validate) StudentClassHandler {
+func NewStudentClassHandler(db *gorm.DB, accountService account_service.AccountService, _validator *validator.Validate, SkipAuth bool) StudentClassHandler {
 	return StudentClassHandler{
 		Service: service.StudentClassService{
 			Db: db,
 		},
 		AccService: accountService,
 		validator:  _validator,
+		SkipAuth:   SkipAuth,
 	}
 }
 
@@ -37,7 +39,7 @@ func NewStudentClassHandler(db *gorm.DB, accountService account_service.AccountS
 // @Router /student-classes [post]
 func (h *StudentClassHandler) CreateHandler(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
-	auth, err := h.AccService.Auth(token)
+	auth, err := h.AccService.Auth(token, h.SkipAuth)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
@@ -55,7 +57,7 @@ func (h *StudentClassHandler) CreateHandler(c *gin.Context) {
 		return
 	}
 
-	if auth.ID != req.StudentID && !auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}) {
+	if !auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}, h.SkipAuth) {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
 	}
@@ -89,7 +91,7 @@ func (h *StudentClassHandler) CreateHandler(c *gin.Context) {
 // @Router /student-classes [delete]
 func (h *StudentClassHandler) DeleteHandler(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
-	auth, err := h.AccService.Auth(token)
+	auth, err := h.AccService.Auth(token, h.SkipAuth)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
@@ -107,7 +109,7 @@ func (h *StudentClassHandler) DeleteHandler(c *gin.Context) {
 		return
 	}
 
-	if auth.ID != req.StudentID && !auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}) {
+	if !auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}, h.SkipAuth) {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
 	}
