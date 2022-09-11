@@ -36,10 +36,7 @@ func NewStudentClassHandler(db *gorm.DB, accountService account_service.AccountS
 // @Success 201 {object} response.StudentClassResponse
 // @Router /student-classes [post]
 func (h *StudentClassHandler) CreateHandler(c *gin.Context) {
-	token := c.Query("token")
-	if len(token) < 2 {
-		token = c.Request.Header.Get("Authorization")
-	}
+	token := c.Request.Header.Get("Authorization")
 	auth, err := h.AccService.Auth(token)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
@@ -91,10 +88,7 @@ func (h *StudentClassHandler) CreateHandler(c *gin.Context) {
 // @Success 204 {object} response.StudentClassResponse
 // @Router /student-classes [delete]
 func (h *StudentClassHandler) DeleteHandler(c *gin.Context) {
-	token := c.Query("token")
-	if len(token) < 2 {
-		token = c.Request.Header.Get("Authorization")
-	}
+	token := c.Request.Header.Get("Authorization")
 	auth, err := h.AccService.Auth(token)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
