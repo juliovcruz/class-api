@@ -71,7 +71,11 @@ func (s *AccountService) Auth(token string, skipAuth bool) (AuthResponse, error)
 	}, nil
 }
 
-func (s *AccountService) ExistsTeacher(token string, uuid uuid.UUID) error {
+func (s *AccountService) ExistsTeacher(token string, uuid uuid.UUID, skipAuth bool) error {
+	if skipAuth {
+		return nil
+	}
+
 	req, err := http.NewRequest("GET", s.URL+"/professor/id", nil)
 	if err != nil {
 		return err
@@ -99,7 +103,10 @@ func (s *AccountService) ExistsTeacher(token string, uuid uuid.UUID) error {
 	return nil
 }
 
-func (s *AccountService) ExistsStudent(token string, uuid uuid.UUID) error {
+func (s *AccountService) ExistsStudent(token string, uuid uuid.UUID, skipAuth bool) error {
+	if skipAuth {
+		return nil
+	}
 	req, err := http.NewRequest("GET", s.URL+"/aluno/id", nil)
 	if err != nil {
 		return err

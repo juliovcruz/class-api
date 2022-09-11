@@ -81,7 +81,7 @@ func (h *ClassHandler) CreateHandler(c *gin.Context) {
 		return
 	}
 
-	if err := h.AccService.ExistsTeacher(token, class.TeacherID); err != nil {
+	if err := h.AccService.ExistsTeacher(token, class.TeacherID, h.SkipAuth); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
