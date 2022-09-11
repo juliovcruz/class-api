@@ -40,7 +40,7 @@ func main() {
 	router.Use(cors.New(cors.Config{
 		AllowAllOrigins:        true,
 		AllowMethods:           []string{"GET", "DELETE", "PUT", "PATCH", "OPTIONS"},
-		AllowHeaders:           []string{"Access-Control-Allow-Headers", "access-control-allow-origin, access-control-allow-headers", "Content-Type", "X-XSRF-TOKEN", "Accept", "Origin", "X-Requested-With", "Authorization"},
+		AllowHeaders:           []string{"Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "access-control-allow-origin, access-control-allow-headers", "access-control-allow-origin", "Access-Control-Allow-Headers", "Content-Type", "X-XSRF-TOKEN", "Accept", "Origin", "X-Requested-With", "Authorization"},
 		AllowCredentials:       true,
 		ExposeHeaders:          []string{"Content-Length"},
 		MaxAge:                 12 * time.Hour,
