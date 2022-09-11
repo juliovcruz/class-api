@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
@@ -12,6 +13,7 @@ import (
 	"main/internal/account_service"
 	"main/internal/platform"
 	"os"
+	"time"
 )
 
 func main() {
@@ -35,24 +37,19 @@ func main() {
 	studentClassHandler := handlers.NewStudentClassHandler(db, accountService, validatr)
 
 	router := gin.Default()
-	router.Use(CORSMiddleware())
+	router.Use(cors.New(cors.Config{
+		AllowAllOrigins:        true,
+		AllowOrigins:           []string{"*"},
+		AllowMethods:           []string{"GET", "DELETE", "PUT", "PATCH", "OPTIONS"},
+		AllowHeaders:           []string{"Access-Control-Allow-Headers", "access-control-allow-origin, access-control-allow-headers", "Content-Type", "X-XSRF-TOKEN", "Accept", "Origin", "X-Requested-With", "Authorization"},
+		AllowCredentials:       true,
+		ExposeHeaders:          []string{"Content-Length"},
+		MaxAge:                 12 * time.Hour,
+		AllowWildcard:          true,
+		AllowBrowserExtensions: true,
+		AllowWebSockets:        true,
+		AllowFiles:             true,
+	}))
 
 	handlers.API(router, classHandler, studentClassHandler)
-}
-
-func CORSMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-
-		c.Header("Access-Control-Allow-Origin", "*")
-		c.Header("Access-Control-Allow-Credentials", "true")
-		c.Header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Header("Access-Control-Allow-Methods", "POST,HEAD,PATCH, OPTIONS, GET, PUT")
-
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
-			return
-		}
-
-		c.Next()
-	}
 }
