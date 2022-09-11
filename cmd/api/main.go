@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
+	cors "github.com/rs/cors/wrapper/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
@@ -13,7 +13,6 @@ import (
 	"main/internal/account_service"
 	"main/internal/platform"
 	"os"
-	"time"
 )
 
 func main() {
@@ -37,18 +36,19 @@ func main() {
 	studentClassHandler := handlers.NewStudentClassHandler(db, accountService, validatr)
 
 	router := gin.Default()
-	router.Use(cors.New(cors.Config{
-		AllowAllOrigins:        true,
-		AllowMethods:           []string{"GET", "DELETE", "PUT", "PATCH", "OPTIONS"},
-		AllowHeaders:           []string{"Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "access-control-allow-origin, access-control-allow-headers", "access-control-allow-origin", "Access-Control-Allow-Headers", "Content-Type", "X-XSRF-TOKEN", "Accept", "Origin", "X-Requested-With", "Authorization"},
-		AllowCredentials:       true,
-		ExposeHeaders:          []string{"Content-Length"},
-		MaxAge:                 12 * time.Hour,
-		AllowWildcard:          true,
-		AllowBrowserExtensions: true,
-		AllowWebSockets:        true,
-		AllowFiles:             true,
-	}))
+	router.Use(cors.Default())
+	//router.Use(cors.New(cors.Options{
+	//	AllowedOrigins:         []string{"*"},
+	//	AllowOriginFunc:        nil,
+	//	AllowOriginRequestFunc: nil,
+	//	AllowedMethods:         []string{"POST", "PUT", "DELETE", "PATCH", "GET", "OPTIONS"},
+	//	AllowedHeaders:         []string{"*"},
+	//	MaxAge:                 10000000000000,
+	//	AllowCredentials:       false,
+	//	OptionsPassthrough:     false,
+	//	OptionsSuccessStatus:   0,
+	//	Debug:                  false,
+	//}))
 
 	handlers.API(router, classHandler, studentClassHandler)
 }
