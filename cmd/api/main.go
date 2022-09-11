@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
@@ -35,6 +36,7 @@ func main() {
 	studentClassHandler := handlers.NewStudentClassHandler(db, accountService, validatr)
 
 	router := gin.Default()
+	router.Use(cors.Default())
 
 	handlers.API(router, classHandler, studentClassHandler)
 }
