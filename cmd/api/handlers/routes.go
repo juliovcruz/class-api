@@ -24,7 +24,7 @@ func API(classHandler ClassHandler, studentClassHandler StudentClassHandler) {
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	err := router.Run(":8081")
+	err := router.Run(":8085")
 	if err != nil {
 		log.Fatal("api can't run in port 8085")
 	}
@@ -37,7 +37,7 @@ func CORS() gin.HandlerFunc {
 			ctx.Header("Access-Control-Max-Age", "1728000")
 			ctx.Header("Access-Control-Allow-Credentials", "true")
 			ctx.Header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS")
-			ctx.Header("Access-Control-Allow-Origin", "*")
+			ctx.Header("Access-Control-Allow-Origin", ctx.Request.Header.Get("Origin"))
 			ctx.Header("Access-Control-Allow-Headers", "*")
 			ctx.AbortWithStatus(http.StatusNoContent)
 			return

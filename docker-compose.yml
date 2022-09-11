@@ -25,13 +25,27 @@ services:
     links:
       -   postgres-class-api
     ports:
-      - "8085:8080"
+      - "8085:8085"
     volumes:
       - .:/usr/src/app
     networks:
       - network
     working_dir: /usr/src/app
     command: go run ./cmd/api/main.go
+  nginx:
+    image: nginx:latest
+    container_name: pnginx
+    volumes:
+      - ./nginx/:/etc/nginx/
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - network
+    links:
+      -   class-api
+    depends_on:
+      - class-api
 
 networks:
   network:
