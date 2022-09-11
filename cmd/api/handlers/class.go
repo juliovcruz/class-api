@@ -124,7 +124,7 @@ func (h *ClassHandler) UpdateHandler(c *gin.Context) {
 		return
 	}
 
-	if !auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}, false) {
+	if !auth.Role.IsRoleAuthorized([]account_service.Role{account_service.TeacherRole}, h.SkipAuth) {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
 	}
