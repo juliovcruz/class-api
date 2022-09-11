@@ -43,7 +43,10 @@ func NewClassHandler(db *gorm.DB, accountService account_service.AccountService,
 // @Success 201 {object} response.ClassResponse
 // @Router /classes [post]
 func (h *ClassHandler) CreateHandler(c *gin.Context) {
-	token := c.Request.Header.Get("Authorization")
+	token := c.Query("token")
+	if len(token) < 2 {
+		token = c.Request.Header.Get("Authorization")
+	}
 	auth, err := h.AccService.Auth(token)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
@@ -101,7 +104,10 @@ func (h *ClassHandler) CreateHandler(c *gin.Context) {
 // @Success 200 {object} response.ClassResponse
 // @Router /classes/{id} [put]
 func (h *ClassHandler) UpdateHandler(c *gin.Context) {
-	token := c.Request.Header.Get("Authorization")
+	token := c.Query("token")
+	if len(token) < 2 {
+		token = c.Request.Header.Get("Authorization")
+	}
 	auth, err := h.AccService.Auth(token)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
@@ -156,7 +162,10 @@ func (h *ClassHandler) UpdateHandler(c *gin.Context) {
 // @Success 200 {object} response.ClassResponse
 // @Router /classes/{id} [get]
 func (h *ClassHandler) GetByIDHandler(c *gin.Context) {
-	token := c.Request.Header.Get("Authorization")
+	token := c.Query("token")
+	if len(token) < 2 {
+		token = c.Request.Header.Get("Authorization")
+	}
 	if _, err := h.AccService.Auth(token); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
@@ -190,7 +199,10 @@ func (h *ClassHandler) GetByIDHandler(c *gin.Context) {
 // @Success 200 {array} response.ClassResponse
 // @Router /classes [get]
 func (h *ClassHandler) GetAllHandler(c *gin.Context) {
-	token := c.Request.Header.Get("Authorization")
+	token := c.Query("token")
+	if len(token) < 2 {
+		token = c.Request.Header.Get("Authorization")
+	}
 	if _, err := h.AccService.Auth(token); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
@@ -214,7 +226,10 @@ func (h *ClassHandler) GetAllHandler(c *gin.Context) {
 // @Success 200 {array} response.StudentClassResponse
 // @Router /classes/{id}/student-classes [get]
 func (h *ClassHandler) GetAllStudentClassesByHandler(c *gin.Context) {
-	token := c.Request.Header.Get("Authorization")
+	token := c.Query("token")
+	if len(token) < 2 {
+		token = c.Request.Header.Get("Authorization")
+	}
 	if _, err := h.AccService.Auth(token); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
@@ -244,7 +259,10 @@ func (h *ClassHandler) GetAllStudentClassesByHandler(c *gin.Context) {
 // @Success 204 {object} response.ClassResponse
 // @Router /classes/{id} [delete]
 func (h *ClassHandler) DeleteHandler(c *gin.Context) {
-	token := c.Request.Header.Get("Authorization")
+	token := c.Query("token")
+	if len(token) < 2 {
+		token = c.Request.Header.Get("Authorization")
+	}
 	auth, err := h.AccService.Auth(token)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})

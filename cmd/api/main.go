@@ -1,10 +1,8 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
-	cors "github.com/rs/cors/wrapper/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
@@ -35,20 +33,5 @@ func main() {
 	classHandler := handlers.NewClassHandler(db, accountService, validatr)
 	studentClassHandler := handlers.NewStudentClassHandler(db, accountService, validatr)
 
-	router := gin.Default()
-	router.Use(cors.Default())
-	//router.Use(cors.New(cors.Options{
-	//	AllowedOrigins:         []string{"*"},
-	//	AllowOriginFunc:        nil,
-	//	AllowOriginRequestFunc: nil,
-	//	AllowedMethods:         []string{"POST", "PUT", "DELETE", "PATCH", "GET", "OPTIONS"},
-	//	AllowedHeaders:         []string{"*"},
-	//	MaxAge:                 10000000000000,
-	//	AllowCredentials:       false,
-	//	OptionsPassthrough:     false,
-	//	OptionsSuccessStatus:   0,
-	//	Debug:                  false,
-	//}))
-
-	handlers.API(router, classHandler, studentClassHandler)
+	handlers.API(classHandler, studentClassHandler)
 }
