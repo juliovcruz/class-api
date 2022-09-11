@@ -32,7 +32,7 @@ func NewClassHandler(db *gorm.DB, accountService account_service.AccountService,
 		StudentClassService: service.StudentClassService{
 			Db: db,
 		},
-		SkipAuth: true,
+		SkipAuth: SkipAuth,
 	}
 }
 
