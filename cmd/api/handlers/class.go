@@ -37,7 +37,6 @@ func NewClassHandler(db *gorm.DB, accountService account_service.AccountService,
 }
 
 // @Summary Create Class
-// @Description Only the class teacher can create it
 // @Tags         classes
 // @Accept json
 // @Produce json

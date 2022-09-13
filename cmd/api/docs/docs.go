@@ -57,7 +57,6 @@ var doc = `{
                 }
             },
             "post": {
-                "description": "Only the class teacher can create it",
                 "consumes": [
                     "application/json"
                 ],
@@ -383,6 +382,9 @@ var doc = `{
             "type": "object",
             "properties": {
                 "created_at": {
+                    "type": "string"
+                },
+                "description": {
                     "type": "string"
                 },
                 "id": {
